@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class Intro extends Component {
   render() {
     return (
-      <div style={{ padding: 10 }}>
+      <div>
         <h3>SQUARE the CIRCLE</h3>
         <p><i>by Kris Vitt</i></p>
         <p>

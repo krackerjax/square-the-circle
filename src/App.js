@@ -14,22 +14,19 @@ class App extends Component {
 class PiGame extends Component {
   constructor(props) {
     super(props);
-    const startSize = this.getRandomInt(100, 400);
-    const circleColor = this.getRandomColor();
-    const squareColor = this.getRandomColor();
 
     this.state = {
-      circleColor: circleColor,
-      squareColor: squareColor,
-      circleRadius: startSize,
-      squareLength: startSize * 1.35,
+      circleColor: '',
+      squareColor: '',
+      circleRadius: 0,
+      squareLength: 0,
       gameHeight: 800,
       gameWidth: 1200,
       squareChangeDirection: 1,
       squareChangeAmount: 2,
       isRunning: false,
-      changeInterval: 10,
-      playerName: '',
+      changeInterval: 5,
+      playerName: 'Anonymous',
       results: [],
       lastResult: {}
     }
@@ -45,7 +42,7 @@ class PiGame extends Component {
     this.setState(newState);
   }
 
-  getRandomInt = (min, max) => {
+  getRandomInt = (min = 150, max = 350) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
@@ -55,7 +52,14 @@ class PiGame extends Component {
 
   handleStart = () => {
     if (!this.state.isRunning) {
-      this.setState({ isRunning: true });
+      let newState = { ...this.state };
+      newState.circleRadius = this.getRandomInt();
+      newState.circleColor = this.getRandomColor();
+      newState.squareLength = newState.circleRadius * 1.35;
+      newState.squareColor = this.getRandomColor();
+      newState.isRunning = true;
+      this.setState(newState);
+
       this.timer = setInterval(this.updateSquareSize, this.state.changeInterval);
     }
   }
@@ -65,36 +69,40 @@ class PiGame extends Component {
 
     let newState = { ...this.state };
 
-    if(newState.lastResult) {
-      newState.results.push({...newState.lastResult});
+    if (newState.lastResult) {
+      newState.results.push({ ...newState.lastResult });
     }
 
-    newState.lastResult.squareArea = newState.squareLength * newState.squareLength;    
+    newState.lastResult.squareArea = newState.squareLength * newState.squareLength;
     newState.lastResult.rSquared = newState.circleRadius * newState.circleRadius;
     newState.lastResult.circleArea = newState.lastResult.rSquared * Math.PI;
     newState.lastResult.yourPI = newState.lastResult.squareArea / newState.lastResult.rSquared;
     newState.lastResult.accuracy = newState.lastResult.squareArea / newState.lastResult.circleArea;
+    if (newState.lastResult.accuracy > 1) {
+      newState.lastResult.accuracy = (1 - (newState.lastResult.accuracy - 1));
+    }
     newState.lastResult.name = newState.playerName;
 
     newState.isRunning = false;
-    
+
     this.setState(newState);
   }
 
   handlePlayerNameChange = (e) => {
-    this.setState({playerName: e.target.value});
+    this.setState({ playerName: e.target.value });
   }
 
   render() {
     return (
       <div>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", padding: "1em" }}>
           <div className="left-pane">
             <Intro />
-            <Result 
+            <Result
               result={this.state.lastResult}
               isRunning={this.state.isRunning}
             />
+
           </div>
           <div style={{ textAlign: "center" }}>
             <GameDisplay
@@ -105,11 +113,13 @@ class PiGame extends Component {
               squareLength={this.state.squareLength}
               squareColor={this.state.squareColor}
             />
-            Your Name: <input type="text" value={this.state.playerName} onChange={this.handlePlayerNameChange} />
-            <div>
-              {!this.state.isRunning && <button className="bigButton" style={{ backgroundColor: "blue" }} onClick={this.handleStart}>Start</button>}
-              {this.state.isRunning && <button className="bigButton" style={{ backgroundColor: "red" }} onClick={this.handleStop}>Stop</button>}
-            </div>
+
+            Your Name: <input style={{ marginRight: "2em", height: "2em" }} type="text" value={this.state.playerName} onChange={this.handlePlayerNameChange} />
+
+            {!this.state.isRunning && <button className="bigButton" style={{ backgroundColor: "blue" }} onClick={this.handleStart}>Start</button>}
+            {this.state.isRunning && <button className="bigButton" style={{ backgroundColor: "red" }} onClick={this.handleStop}>Stop</button>}
+
+
           </div>
         </div>
       </div>
