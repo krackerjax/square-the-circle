@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
 
+import Intro from './components/Intro';
+import GameDisplay from './components/GameDisplay';
+import Result from './components/Result';
+
 class App extends Component {
   render() {
     return <PiGame />;
@@ -20,23 +24,24 @@ class PiGame extends Component {
       circleRadius: startSize,
       squareLength: startSize * 1.35,
       gameHeight: 800,
-      gameWidth: 1600,
-      squareChangeAmount: 1,
+      gameWidth: 1200,
+      squareChangeDirection: 1,
+      squareChangeAmount: 2,
       isRunning: false,
-      changeInterval: 5,
-      playerNameInput: '',
+      changeInterval: 10,
+      playerName: '',
       results: [],
-      lastResult: null
+      lastResult: {}
     }
   }
 
   updateSquareSize = () => {
     let newState = { ...this.state };
     if (newState.squareLength > newState.circleRadius * 1.95 || newState.squareLength < newState.circleRadius * 1.3) {
-      newState.squareChangeAmount *= -1;
+      newState.squareChangeDirection *= -1;
     }
 
-    newState.squareLength += newState.squareChangeAmount;
+    newState.squareLength += newState.squareChangeDirection * newState.squareChangeAmount;
     this.setState(newState);
   }
 
@@ -48,16 +53,6 @@ class PiGame extends Component {
     return "#000000".replace(/0/g, function () { return (~~(Math.random() * 16)).toString(16); });
   }
 
-  calculateSquareCenterX = () => {
-    const center = this.state.gameWidth / 2;
-    return center - (this.state.squareLength / 2);
-  }
-
-  calculateSquareCenterY = () => {
-    const center = this.state.gameHeight / 2;
-    return center - (this.state.squareLength / 2);
-  }
-
   handleStart = () => {
     if (!this.state.isRunning) {
       this.setState({ isRunning: true });
@@ -67,44 +62,50 @@ class PiGame extends Component {
 
   handleStop = () => {
     clearInterval(this.timer);
-    this.setState({ isRunning: false });
-    let square = this.state.squareLength * this.state.squareLength;
-    let rSquared = this.state.circleRadius * this.state.circleRadius;
-    let circle = rSquared * Math.PI;
-    let yourPI = square / rSquared;
-    console.log("Square Area: " + square)
-    console.log("Circle Area: " + circle);
-    console.log("PI " + yourPI.toFixed(5))
+
+    let newState = { ...this.state };
+
+    if(newState.lastResult) {
+      newState.results.push({...newState.lastResult});
+    }
+
+    newState.lastResult.squareArea = newState.squareLength * newState.squareLength;    
+    newState.lastResult.rSquared = newState.circleRadius * newState.circleRadius;
+    newState.lastResult.circleArea = newState.lastResult.rSquared * Math.PI;
+    newState.lastResult.yourPI = newState.lastResult.squareArea / newState.lastResult.rSquared;
+    newState.lastResult.accuracy = newState.lastResult.squareArea / newState.lastResult.circleArea;
+    newState.lastResult.name = newState.playerName;
+
+    newState.isRunning = false;
+    
+    this.setState(newState);
+  }
+
+  handlePlayerNameChange = (e) => {
+    this.setState({playerName: e.target.value});
   }
 
   render() {
     return (
       <div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div style={{ padding: 10 }}>
-            <h3>SQUARE the CIRCLE</h3>
-            <p><i>by Kris Vitt</i></p>
-            <p>
-              For thousands of years, amateur and professional mathematicians alike have tried to conquer the problem of 'squaring' the circle -- generally finding a
-              square with the same area as a circle. If this were possible, π wouldn't be transcendental! What a shame that would be!
-          </p>
-            <p>
-              Here is your chance to square the circle, and perhaps win a prize if you are truly a transcendental mathlete!
-          </p>
-            <p>To Play:</p>
-            <ul>
-              <li>Enter your name</li>
-              <li>Click the Big Button to Start</li>
-              <li>When you think the area of the circle and square match, click Stop</li>
-              <li>Only one turn per person, per round please</li>
-            </ul>
+          <div className="left-pane">
+            <Intro />
+            <Result 
+              result={this.state.lastResult}
+              isRunning={this.state.isRunning}
+            />
           </div>
           <div style={{ textAlign: "center" }}>
-            <svg onClick={this.handleClick} height={this.state.gameHeight} width={this.state.gameWidth} style={{ backgroundColor: "#BFEFFF" }}>
-              <Circle cx={this.state.gameWidth / 2} cy={this.state.gameHeight / 2} radius={this.state.circleRadius} stroke={this.state.circleColor} fill={this.state.circleColor} />
-              <Rectangle cx={this.calculateSquareCenterX()} cy={this.calculateSquareCenterY()} radius={this.state.squareLength} stroke={this.state.squareColor} fill={this.state.squareColor} />
-            </svg>
-            Your Name: <input type="text" value={this.state.playerNameInput} onChange={this.handlePlayerNameChange} />
+            <GameDisplay
+              gameHeight={this.state.gameHeight}
+              gameWidth={this.state.gameWidth}
+              circleRadius={this.state.circleRadius}
+              circleColor={this.state.circleColor}
+              squareLength={this.state.squareLength}
+              squareColor={this.state.squareColor}
+            />
+            Your Name: <input type="text" value={this.state.playerName} onChange={this.handlePlayerNameChange} />
             <div>
               {!this.state.isRunning && <button className="bigButton" style={{ backgroundColor: "blue" }} onClick={this.handleStart}>Start</button>}
               {this.state.isRunning && <button className="bigButton" style={{ backgroundColor: "red" }} onClick={this.handleStop}>Stop</button>}
@@ -113,18 +114,6 @@ class PiGame extends Component {
         </div>
       </div>
     );
-  }
-}
-
-export class Circle extends Component {
-  render() {
-    return <circle cx={this.props.cx} cy={this.props.cy} r={this.props.radius} stroke={this.props.stroke} strokeWidth="8" fill={this.props.fill} />
-  }
-}
-
-export class Rectangle extends Component {
-  render() {
-    return <rect x={this.props.cx} y={this.props.cy} width={this.props.radius} height={this.props.radius} stroke={this.props.stroke} strokeWidth="8" fill={this.props.fill} />
   }
 }
 
