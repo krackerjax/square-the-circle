@@ -57,19 +57,29 @@ class PiGame extends Component {
       newState.results.push({ ...newState.lastResult });
     }
 
-    newState.lastResult.squareArea = newState.squareLength * newState.squareLength;
-    newState.lastResult.rSquared = newState.circleRadius * newState.circleRadius;
-    newState.lastResult.circleArea = newState.lastResult.rSquared * Math.PI;
-    newState.lastResult.yourPI = newState.lastResult.squareArea / newState.lastResult.rSquared;
-    newState.lastResult.accuracy = newState.lastResult.squareArea / newState.lastResult.circleArea;
-    if (newState.lastResult.accuracy > 1) {
-      newState.lastResult.accuracy = (1 - (newState.lastResult.accuracy - 1));
-    }
-    newState.lastResult.name = newState.playerName;
-
+    newState.lastResult = this.getResult(newState.squareLength, newState.circleRadius);
+    console.log(newState.lastResult)
     newState.isRunning = false;
 
     this.setState(newState);
+  }
+
+  getResult = (squareLength, circleRadius) => {
+    let squareArea = squareLength * squareLength;
+    let rSquared = circleRadius * circleRadius;
+    let circleArea = rSquared * Math.PI;
+    let accuracy = squareArea / circleArea;
+    if (accuracy > 1) {
+      accuracy = (1 - (accuracy - 1));
+    }
+
+    return {
+      name: this.state.playerName,
+      squareArea: squareArea,
+      circleArea: circleArea,
+      accuracy: accuracy,
+      yourPI: squareArea / rSquared,
+    }
   }
 
   handlePlayerNameChange = (e) => {
@@ -114,7 +124,6 @@ class PiGame extends Component {
               result={this.state.lastResult}
               isRunning={this.state.isRunning}
             />
-
           </div>
           <div style={{ textAlign: "center", width: "75%", height: "90%" }}>
             <GameDisplay
