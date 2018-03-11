@@ -1,4 +1,14 @@
 .bigButton {
-  width: 10em;
-  font-size: 3em;
+  width: 80%;
+  height: 8%;
+  font-size: 2em;
+  margin-top: .5em;
+}
+
+.left-pane {
+  width: 25%;
+}
+
+.buttonContainer {
+  align-items: center;
 }

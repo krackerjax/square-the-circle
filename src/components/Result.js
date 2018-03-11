@@ -12,7 +12,7 @@ class Result extends PureComponent {
     return (
       !isRunning ?
         <div>
-          <h3>Thanks for playing {result.name}!</h3>
+          <h3>Thanks for playing, {result.name}!</h3>
           <h4>Score:</h4>
           <ul>
             <li>

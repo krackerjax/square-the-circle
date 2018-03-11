@@ -11,7 +11,7 @@ class GameDisplay extends PureComponent {
   render() {
     const { gameHeight, gameWidth, circleRadius, circleColor, squareLength, squareColor } = this.props;
     return (
-      <svg height={gameHeight} width={gameWidth} style={{ backgroundColor: "#BFEFFF" }}>
+      <svg viewBox={"0 0 " + gameWidth + " " + gameHeight}  style={{ backgroundColor: "#BFEFFF", maxHeight:"70%" }}>
         <Circle
           cx={gameWidth / 2}
           cy={gameHeight / 2}
