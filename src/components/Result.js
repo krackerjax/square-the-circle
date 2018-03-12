@@ -11,27 +11,21 @@ class Result extends PureComponent {
 
     return (
       !isRunning ?
-        <div style={{display: "flex", justifyContent: "space-between"}}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div>
             <h3>Thanks for playing, {result.name}!</h3>
             <h4>Score:</h4>
             <ul>
-              {/* <li>
-              Circle Area: {Math.round(result.circleArea)}
-            </li>
-            <li>
-              Square Area: {Math.round(result.squareArea)}
-            </li> */}
               <li>
                 Accuracy: {(result.accuracy * 100).toFixed(2)}%
-          </li>
+             </li>
               <li>
                 π by your estimate: {result.yourPI ? result.yourPI.toFixed(5) : 0}
               </li>
             </ul>
           </div>
-          <div>
-            <button onClick={this.props.submitScore}>Submit</button>
+          <div style={{width:"25%"}}>
+            <button className="high-score-submit" disabled={this.props.hasSubmitted} onClick={this.props.submitScore}>Submit High Score!</button>
           </div>
         </div>
         :

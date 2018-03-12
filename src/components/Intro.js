@@ -4,7 +4,7 @@ class Intro extends Component {
   render() {
     return (
       <div>
-        <h3>SQUARE the CIRCLE</h3>
+        <h2>SQUARE the CIRCLE</h2>
         <p><i>by Kris Vitt</i></p>
         {/* <p>
           For thousands of years, amateur and professional mathematicians alike have tried to conquer the problem of 'squaring' the circle -- using a compass and straightedge to find a

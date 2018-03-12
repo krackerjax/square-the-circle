@@ -12,3 +12,13 @@
 .buttonContainer {
   align-items: center;
 }
+
+.high-score-submit {
+  height: 80%;
+  width: 100%;
+  margin-top: 1em;
+  margin-left: -.5em; 
+  background-color: green;
+  font-weight: "bold";
+  font-size: 1.2em;
+}

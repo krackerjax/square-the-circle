@@ -4,6 +4,7 @@ import './App.css';
 import Intro from './components/Intro';
 import GameDisplay from './components/GameDisplay';
 import Result from './components/Result';
+import TopScores from './components/TopScores';
 
 import firebase from './firebase';
 
@@ -29,8 +30,8 @@ class PiGame extends Component {
       isRunning: false,
       changeInterval: 8,
       playerName: 'Anonymous',
-      results: [],
-      lastResult: {}
+      lastResult: {},
+      hasSubmitted: false
     }
   }
 
@@ -42,6 +43,7 @@ class PiGame extends Component {
       newState.squareLength = newState.circleRadius * 1.35;
       newState.squareColor = this.getRandomColor();
       newState.isRunning = true;
+      newState.hasSubmitted = false;
       this.setState(newState);
 
       this.timer = setInterval(this.updateSquareSize, this.state.changeInterval);
@@ -53,15 +55,22 @@ class PiGame extends Component {
 
     let newState = { ...this.state };
 
-    if (newState.lastResult) {
-      newState.results.push({ ...newState.lastResult });
-    }
-
     newState.lastResult = this.getResult(newState.squareLength, newState.circleRadius);
-    console.log(newState.lastResult)
+
+    const resultRef = firebase.database().ref('allResults/' + this.state.playerName);
+    resultRef.push(newState.lastResult);
+
     newState.isRunning = false;
 
     this.setState(newState);
+  }
+
+  submitScore = () => {
+    if (!this.state.hasSubmitted) {
+      const resultRef = firebase.database().ref('highScores');
+      resultRef.push(this.state.lastResult);
+      this.setState({hasSubmitted: true});
+    }
   }
 
   getResult = (squareLength, circleRadius) => {
@@ -72,6 +81,7 @@ class PiGame extends Component {
     if (accuracy > 1) {
       accuracy = (1 - (accuracy - 1));
     }
+    let date = new Date();
 
     return {
       name: this.state.playerName,
@@ -79,6 +89,8 @@ class PiGame extends Component {
       circleArea: circleArea,
       accuracy: accuracy,
       yourPI: squareArea / rSquared,
+      date: date.toLocaleDateString() + " " + date.toLocaleTimeString(),
+      timeStamp: date.getTime()
     }
   }
 
@@ -113,7 +125,8 @@ class PiGame extends Component {
               style={{ marginRight: "2em", height: "2em" }}
               type="text"
               value={this.state.playerName}
-              onChange={this.handlePlayerNameChange} />
+              onChange={this.handlePlayerNameChange}
+              maxLength="10" />
             <div className="buttonContainer" >
               {!this.state.isRunning && <button className="bigButton" style={{ backgroundColor: "green" }} onClick={this.handleStart}>Start</button>}
               {this.state.isRunning && <button className="bigButton" style={{ backgroundColor: "red" }} onClick={this.handleStop}>Stop</button>}
@@ -123,7 +136,10 @@ class PiGame extends Component {
             <Result
               result={this.state.lastResult}
               isRunning={this.state.isRunning}
+              submitScore={this.submitScore}
+              hasSubmitted={this.state.hasSubmitted}
             />
+            <TopScores />
           </div>
           <div style={{ textAlign: "center", width: "75%", height: "90%" }}>
             <GameDisplay
