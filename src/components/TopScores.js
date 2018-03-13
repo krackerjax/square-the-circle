@@ -12,7 +12,7 @@ class TopScores extends Component {
   }
 
   componentWillMount() {
-    var scoresRef = firebase.database().ref("highScores-easy");
+    var scoresRef = firebase.database().ref("highScores313-easy");
     scoresRef.orderByChild("accuracy").on("value", (snapshot) => {
       let newScores = [];
       snapshot.forEach(function (data) {
@@ -22,7 +22,7 @@ class TopScores extends Component {
       this.setState({ scores: newScores.reverse().slice(0, 10) });
     });
 
-    var hardScoresRef = firebase.database().ref("highScores-hard");
+    var hardScoresRef = firebase.database().ref("highScores313-hard");
     hardScoresRef.orderByChild("accuracy").on("value", (snapshot) => {
       let newHardScores = [];
       snapshot.forEach(function (data) {

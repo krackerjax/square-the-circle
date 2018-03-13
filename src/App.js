@@ -92,7 +92,7 @@ class PiGame extends Component {
 
   submitScore = () => {
     if (!this.state.hasSubmitted) {
-      const resultRef = firebase.database().ref('highScores-' + this.state.lastResult.difficulty);
+      const resultRef = firebase.database().ref('highScores313-' + this.state.lastResult.difficulty);
       resultRef.push({ ...this.state.lastResult, name: this.state.playerName });
       this.setState({ hasSubmitted: true });
     }
