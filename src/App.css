@@ -22,3 +22,17 @@
   font-weight: "bold";
   font-size: 1.4em;
 }
+
+.hardButton {
+  height: 2em;
+  background-color: red;
+  font-weight: bold;
+  font-size: 2em;
+}
+
+.easyButton {
+  height: 2em;
+  background-color: lightgreen;
+  font-weight: bold;
+  font-size: 2em;
+}

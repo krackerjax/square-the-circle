@@ -9,9 +9,9 @@ class GameDisplay extends PureComponent {
   }
 
   render() {
-    const { gameHeight, gameWidth, circleRadius, circleColor, squareLength, squareColor } = this.props;
+    const { gameHeight, gameWidth, circleRadius, circleColor, squareLength, squareColor, handleGameClick } = this.props;
     return (
-      <svg viewBox={"0 0 " + gameWidth + " " + gameHeight}  style={{ backgroundColor: "#BFEFFF", maxHeight:"70%" }}>
+      <svg onClick={handleGameClick} viewBox={"0 0 " + gameWidth + " " + gameHeight}  style={{ backgroundColor: "#BFEFFF", maxHeight:"70%" }}>
         <Circle
           cx={gameWidth / 2}
           cy={gameHeight / 2}

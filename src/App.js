@@ -25,14 +25,31 @@ class PiGame extends Component {
       squareLength: 0,
       gameHeight: 600,
       gameWidth: 1000,
-      squareChangeDirection: 1,
-      squareChangeAmount: 2,
+      squareChangeDirection: 1,      
       isRunning: false,
+      difficulty: 'easy',
+      squareChangeAmount: 2,
       changeInterval: 8,
       playerName: '',
       lastResult: {},
       hasSubmitted: false
     }
+  }
+
+  setEasyMode = () => {
+    this.setState({
+      difficulty: 'easy',
+      squareChangeAmount: 2,
+      changeInterval: 8
+    });
+  }
+
+  setHardMode = () => {
+    this.setState({
+      difficulty: 'hard',
+      squareChangeAmount: 2,
+      changeInterval: 1
+    });
   }
 
   handleGameClick = () => {
@@ -75,7 +92,7 @@ class PiGame extends Component {
 
   submitScore = () => {
     if (!this.state.hasSubmitted) {
-      const resultRef = firebase.database().ref('highScores');
+      const resultRef = firebase.database().ref('highScores-' + this.state.lastResult.difficulty);
       resultRef.push({ ...this.state.lastResult, name: this.state.playerName });
       this.setState({ hasSubmitted: true });
     }
@@ -98,7 +115,8 @@ class PiGame extends Component {
       accuracy: accuracy,
       yourPI: squareArea / rSquared,
       date: date.toLocaleDateString() + " " + date.toLocaleTimeString(),
-      timeStamp: date.getTime()
+      timeStamp: date.getTime(),
+      difficulty: this.state.difficulty
     }
   }
 
@@ -110,6 +128,11 @@ class PiGame extends Component {
     let newState = { ...this.state };
     if (newState.squareLength > newState.circleRadius * 1.95 || newState.squareLength < newState.circleRadius * 1.3) {
       newState.squareChangeDirection *= -1;
+    }
+
+    if(newState.difficulty === 'hard') {
+      newState.squareColor = this.getRandomColor();
+      newState.circleColor = this.getRandomColor();
     }
 
     newState.squareLength += newState.squareChangeDirection * newState.squareChangeAmount;
@@ -138,9 +161,9 @@ class PiGame extends Component {
               handlePlayerNameChange={this.handlePlayerNameChange}
               playerName={this.state.playerName}
             />
-            <TopScores />
+            <TopScores difficulty={this.state.difficulty} />
           </div>
-          <div style={{ textAlign: "center", width: "75%", height: "90%" }} onClick={this.handleGameClick}>
+          <div style={{ textAlign: "center", width: "75%", height: "90%" }}>
             <GameDisplay
               gameHeight={this.state.gameHeight}
               gameWidth={this.state.gameWidth}
@@ -148,7 +171,10 @@ class PiGame extends Component {
               circleColor={this.state.circleColor}
               squareLength={this.state.squareLength}
               squareColor={this.state.squareColor}
+              handleGameClick={this.handleGameClick}
             />
+            {this.state.difficulty === 'hard' && <button className="easyButton" disabled={this.state.isRunning} onClick={this.setEasyMode}>🌼 Back to Easy Mode 🌼</button>}
+            {this.state.difficulty === 'easy' && <button className="hardButton" disabled={this.state.isRunning} onClick={this.setHardMode}>💀 BRING THE PAIN 💀</button>}
           </div>
         </div>
       </div>

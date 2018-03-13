@@ -6,12 +6,13 @@ class TopScores extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      scores: []
+      scores: [],
+      hardScores: []
     }
   }
 
   componentWillMount() {
-    var scoresRef = firebase.database().ref("highScores");
+    var scoresRef = firebase.database().ref("highScores-easy");
     scoresRef.orderByChild("accuracy").on("value", (snapshot) => {
       let newScores = [];
       snapshot.forEach(function (data) {
@@ -20,12 +21,23 @@ class TopScores extends Component {
 
       this.setState({ scores: newScores.reverse().slice(0, 10) });
     });
+
+    var hardScoresRef = firebase.database().ref("highScores-hard");
+    hardScoresRef.orderByChild("accuracy").on("value", (snapshot) => {
+      let newHardScores = [];
+      snapshot.forEach(function (data) {
+        newHardScores.push(data.val());
+      });
+
+      this.setState({ hardScores: newHardScores.reverse().slice(0, 10) });
+    });
   }
 
   render() {
+    const scores = this.props.difficulty === 'easy' ? this.state.scores : this.state.hardScores;
     return (
       <div>
-        <h3>Top Scores:</h3>
+        <h3>Top Scores ({this.props.difficulty}):</h3>
         <table style={{ width: "100%" }}>
           <thead>
             <tr>
@@ -41,7 +53,7 @@ class TopScores extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.scores.map(s =>
+            {scores.map(s =>
               <tr key={s.accuracy}>
                 <td>{s.name}</td>
                 <td>{(s.accuracy * 100).toFixed(2)}%</td>
