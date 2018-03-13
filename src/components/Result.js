@@ -28,7 +28,7 @@ class Result extends PureComponent {
             onChange={this.props.handlePlayerNameChange}
             maxLength="10"
           />
-          <button className="high-score-submit" disabled={this.props.playerName === '' || this.props.hasSubmitted} onClick={this.props.submitScore}>Submit High Score!</button>
+          <button className="high-score-submit" disabled={this.props.playerName === '' || this.props.hasSubmitted || !result.accuracy} onClick={this.props.submitScore}>Submit High Score!</button>
         </div>
       </div>
     );
