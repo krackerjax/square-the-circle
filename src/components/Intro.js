@@ -14,7 +14,7 @@ class Intro extends Component {
           Here is your chance to square the circle, and perhaps win a prize if you are truly a transcendental mathlete!
         </p> */}
         <p>
-          Geometers spent centuries trying to <a href="https://en.wikipedia.org/wiki/Squaring_the_circle" rel="noopener noreferrer" target="_blank">square the circle</a> -- a sisyphean task that you too can now attempt! 
+          Geometers spent centuries <a href="https://commons.wikimedia.org/wiki/File:01-Squaring_the_circle-Ramanujan-1914.gif#/media/File:Squaring_the_circle-Ramanujan-1914.svg" rel="noopener noreferrer" target="_blank">trying</a> to <a href="https://en.wikipedia.org/wiki/Squaring_the_circle" rel="noopener noreferrer" target="_blank">square the circle</a> -- a sisyphean task that you too can now attempt! 
         </p>
         <p>To Play:</p>
         <ul>
