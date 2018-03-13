@@ -29,9 +29,17 @@ class PiGame extends Component {
       squareChangeAmount: 2,
       isRunning: false,
       changeInterval: 8,
-      playerName: 'Anonymous',
+      playerName: '',
       lastResult: {},
       hasSubmitted: false
+    }
+  }
+
+  handleGameClick = () => {
+    if (this.state.isRunning) {
+      this.handleStop();
+    } else {
+      this.handleStart();
     }
   }
 
@@ -68,8 +76,8 @@ class PiGame extends Component {
   submitScore = () => {
     if (!this.state.hasSubmitted) {
       const resultRef = firebase.database().ref('highScores');
-      resultRef.push(this.state.lastResult);
-      this.setState({hasSubmitted: true});
+      resultRef.push({ ...this.state.lastResult, name: this.state.playerName });
+      this.setState({ hasSubmitted: true });
     }
   }
 
@@ -121,27 +129,18 @@ class PiGame extends Component {
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", padding: "2em" }}>
           <div className="left-pane">
-            Your Name: <input
-              style={{ marginRight: "2em", height: "2em" }}
-              type="text"
-              value={this.state.playerName}
-              onChange={this.handlePlayerNameChange}
-              maxLength="10" />
-            <div className="buttonContainer" >
-              {!this.state.isRunning && <button className="bigButton" style={{ backgroundColor: "green" }} onClick={this.handleStart}>Start</button>}
-              {this.state.isRunning && <button className="bigButton" style={{ backgroundColor: "red" }} onClick={this.handleStop}>Stop</button>}
-            </div>
             <Intro />
-
             <Result
               result={this.state.lastResult}
               isRunning={this.state.isRunning}
               submitScore={this.submitScore}
               hasSubmitted={this.state.hasSubmitted}
+              handlePlayerNameChange={this.handlePlayerNameChange}
+              playerName={this.state.playerName}
             />
             <TopScores />
           </div>
-          <div style={{ textAlign: "center", width: "75%", height: "90%" }}>
+          <div style={{ textAlign: "center", width: "75%", height: "90%" }} onClick={this.handleGameClick}>
             <GameDisplay
               gameHeight={this.state.gameHeight}
               gameWidth={this.state.gameWidth}

@@ -3,33 +3,34 @@ import React, { PureComponent } from 'react';
 class Result extends PureComponent {
 
   render() {
-    const { result, isRunning } = this.props;
-
-    if (!result.yourPI && !isRunning) {
-      return null;
-    }
-
+    const { result } = this.props;
     return (
-      !isRunning ?
+      <div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div>
-            <h3>Thanks for playing, {result.name}!</h3>
             <h4>Score:</h4>
             <ul>
               <li>
-                Accuracy: {(result.accuracy * 100).toFixed(2)}%
-             </li>
+                Accuracy: {result.accuracy && <b>{(result.accuracy * 100).toFixed(2)}%</b>}
+              </li>
               <li>
-                π by your estimate: {result.yourPI ? result.yourPI.toFixed(5) : 0}
+                π by your estimate: {result.yourPI && <b>{result.yourPI ? result.yourPI.toFixed(5) : 0}</b>}
               </li>
             </ul>
           </div>
-          <div style={{width:"25%"}}>
-            <button className="high-score-submit" disabled={this.props.hasSubmitted} onClick={this.props.submitScore}>Submit High Score!</button>
-          </div>
         </div>
-        :
-        <div><h5>Calculating ...</h5></div>
+        <div>
+          <input
+            style={{ height: "1.5em" }}
+            placeholder="Name"
+            type="text"
+            value={this.props.playerName}
+            onChange={this.props.handlePlayerNameChange}
+            maxLength="10"
+          />
+          <button className="high-score-submit" disabled={this.props.playerName === '' || this.props.hasSubmitted} onClick={this.props.submitScore}>Submit High Score!</button>
+        </div>
+      </div>
     );
   }
 }

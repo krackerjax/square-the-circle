@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 class Intro extends Component {
   render() {
     return (
-      <div>
-        <h2>SQUARE the CIRCLE</h2>
+      <div style={{marginRight:"1em", backgroundImage:`url(require("sc.png"))`}}>
+        <h2 style={{marginTop:0}}>SQUARE the CIRCLE</h2>
         <p><i>by Kris Vitt</i></p>
         {/* <p>
           For thousands of years, amateur and professional mathematicians alike have tried to conquer the problem of 'squaring' the circle -- using a compass and straightedge to find a
@@ -14,13 +14,13 @@ class Intro extends Component {
           Here is your chance to square the circle, and perhaps win a prize if you are truly a transcendental mathlete!
         </p> */}
         <p>
-          Geometers spent centuries trying to square the circle -- a sisyphean task that you too can now attempt! 
+          Geometers spent centuries trying to <a href="https://en.wikipedia.org/wiki/Squaring_the_circle" rel="noopener noreferrer" target="_blank">square the circle</a> -- a sisyphean task that you too can now attempt! 
         </p>
         <p>To Play:</p>
         <ul>
-          <li>Enter your name.</li>
-          <li>Click the Big Button to Start.</li>
-          <li>When you think the area of the circle and square match, click Stop.</li>
+          <li>Click or tap the blue play area to start.</li>
+          <li>When you think the area of the circle and square match, tap the play area again.</li>
+          <li>Enter your name and submit a highscore to compete for a prize!</li>
         </ul>
       </div>
     );
