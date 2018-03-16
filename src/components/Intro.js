@@ -22,6 +22,7 @@ class Intro extends Component {
           <li>When you think the area of the circle and square match, tap the play area again.</li>
           <li>Enter your name and submit a highscore to compete for a prize!</li>
         </ul>
+        <p>Scores reset! Congrats to Janhavee and Kedar for their winning scores on Pi Day!</p>
       </div>
     );
   }

@@ -29,7 +29,7 @@ class PiGame extends Component {
       isRunning: false,
       difficulty: 'easy',
       squareChangeAmount: 2,
-      changeInterval: 8,
+      changeInterval: 6,
       playerName: '',
       lastResult: {},
       hasSubmitted: false
@@ -40,7 +40,7 @@ class PiGame extends Component {
     this.setState({
       difficulty: 'easy',
       squareChangeAmount: 2,
-      changeInterval: 8
+      changeInterval: 6
     });
   }
 
@@ -92,7 +92,7 @@ class PiGame extends Component {
 
   submitScore = () => {
     if (!this.state.hasSubmitted) {
-      const resultRef = firebase.database().ref('highScores313-' + this.state.lastResult.difficulty);
+      const resultRef = firebase.database().ref('highScores316-' + this.state.lastResult.difficulty);
       resultRef.push({ ...this.state.lastResult, name: this.state.playerName });
       this.setState({ hasSubmitted: true });
     }
